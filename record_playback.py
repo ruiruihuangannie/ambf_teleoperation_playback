@@ -14,6 +14,9 @@ import time
 import signal
 import subprocess
 
+import sys
+import argparse
+
 from surgical_robotics_challenge.simulation_manager import SimulationManager
 import time
 
