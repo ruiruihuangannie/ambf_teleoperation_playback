@@ -17,8 +17,16 @@ import subprocess
 from surgical_robotics_challenge.simulation_manager import SimulationManager
 import time
 
-import keyboard
+# -------------------------------------------
+# parse arguments
+# -------------------------------------------
+argv = sys.argv
+parser = argparse.ArgumentParser(description='indicate the mode')
 
+parser.add_argument('-m', '--mode', type=str, required=True,
+                    help='r stands for recording and p stands for playback')
+args = parser.parse_args()
+ros_topic = "/ambf/env/psm1/baselink/Command /ambf/env/psm2/baselink/Command /ambf/env/psm1/Actuator0/Command /ambf/env/psm2/Actuator0/Command"
 
 # -------------------------------------------
 # Helper: break
@@ -44,13 +52,8 @@ def terminate_process_and_children(p):
 # -------------------------------------------
 # Instantiation
 # -------------------------------------------
-ros_topic =
-    ['/ambf/env/psm1/measured_cp',
-    '/ambf/env/psm1/measured_jp',
-    '/ambf/env/psm2/measured_cp',
-    '/ambf/env/psm2/measured_jp']
-
-simulation_manager = SimulationManager('auto_surturing')
+rospy.init_node("record_teleop")
+simulation_manager = SimulationManager('my_surture_example')
 time.sleep(0.5)
 world_handle = simulation_manager.get_world_handle()
 
@@ -67,25 +70,15 @@ print("Resetting the world")
 world_handle.reset()
 add_break(3.0)
 
-command = "rosbag record -O ambf_data.bag {0}".format(ros_topic)
-rosbag_process = subprocess.Popen(command.split(' '))
+if args.mode == 'r':
+    command = "rosbag record -O ambf_data.bag {0}".format(ros_topic)
+    rosbag_process = subprocess.Popen(command.split(' '))
+else:
+    command = "rosbag play ambf_data.bag"
+    rosbag_process = subprocess.Popen(command.split(' '))
 
-while True:
-    try:
-        if keyboard.is_pressed('q'):
-            terminate_process_and_children(rosbag_process)
-            print('--> Data record complete!!')
-            break
-        
-reindex_cmd = "rosbag reindex ambf_data.bag {0}".format(ros_topic)
-os.system(reindex_cmd)
-sanity_cmd = "rosbag info ambf_data.bag {0}".format(ros_topic)
-os.system(sanity_cmd)
+while not rospy.is_shutdown():
+    pass
 
-# -------------------------------------------
-# Playback Data
-# -------------------------------------------
-command = "rosbag play -r 1000 ambf_data.bag {0}".format(ros_topic)
-rosbag_process = subprocess.Popen(command.split(' '))
+print("--> Done")
 terminate_process_and_children(rosbag_process)
-print('--> Playback complete!')
