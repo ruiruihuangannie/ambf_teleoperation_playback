@@ -61,6 +61,7 @@ cd ~/surgical_robotics_challenge/scripts/surgical_robotics_challenge/teleoperati
 python3 mtm_multi_psm_control.py --mtm MTMR -c mtmr --one 0 --two 1
 ```
 
+## Step 2
 ### Terminal #6: the recorder/playback console
 
 ```shell
@@ -70,10 +71,10 @@ python3 record_playback.py -m r
 
 When the `recording` mode begins, a `[Info]` line should be displayed in the console. When finish recording data, press `ctrl+c` to exit the recorder. When successfully recorded, a `.bag` file should appear in the current repo.
 
-### Before going into the `playback mode`, please make sure that:
+### Before going into the `playback` mode, please make sure that:
 
-1. The scene (particularly the rigid bodies) is reset. This can be done wtih ctrl+R.
-2. The teleoperation scripts (opened previuosly as T#4 and 5) are exited.
+1. The scene (particularly the rigid bodies) is reset. This can be done wtih `Ctrl+R`.
+2. The teleoperation scripts (opened previuosly as Terminal #4 and 5) are exited.
 
 Then run this: 
 
